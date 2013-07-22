@@ -1,5 +1,6 @@
 #!/usr/bin/env python2.7
 #coding: utf-8
+#str test
 
 import SerialReceiveData
 import time
