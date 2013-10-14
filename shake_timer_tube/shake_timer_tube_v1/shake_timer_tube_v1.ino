@@ -1,19 +1,20 @@
 /*
-This is a Shake Timer .3.
+This is a Shake Timer Tube .1.
 
-Use 5 leds to tell you the time after you move the Shake-Timer. 
+Use Tube to tell user what the time after user move the Shake-Timer. 
 
 Use Three-axis angle sensor to monitor moving action.
 
 digital 0 and digital 1 are communication interfaces.
 
 digital 2: Button for display and setting
-digital 3: vibrating monitor sensor
-digital 4: led for 2hour
-digital 5: led for 4hour
-digital 6: led for 6hour
-digital 7: led for 8hour
-digital 8: led for 10hour
+digital 3: 
+digital 4: 
+digital 5: 
+digital 6: 
+digital 7: 
+digital 8: 
+
 Analog  0: x
 Analog  1: y
 Analog  2: z
@@ -220,6 +221,7 @@ void UpdateDisplayInfo(){
             }
             else{
                 digitalWrite(4, LOW);
+                DisplayClean();
                 Work_Mode = 0;
                 initTimerCount();
             }
@@ -238,6 +240,7 @@ void UpdateDisplayInfo(){
             else{
                 digitalWrite(4, LOW);
                 digitalWrite(5, LOW);
+                DisplayClean();
                 Work_Mode = 0;
                 initTimerCount();
             }
@@ -262,6 +265,7 @@ void UpdateDisplayInfo(){
                 digitalWrite(4, LOW);
                 digitalWrite(5, LOW);
                 digitalWrite(6, LOW);
+                DisplayClean();
                 Work_Mode = 0;
                 initTimerCount();
             }
@@ -293,6 +297,7 @@ void UpdateDisplayInfo(){
                 digitalWrite(5, LOW);
                 digitalWrite(6, LOW);
                 digitalWrite(7, LOW);
+                DisplayClean();
                 Work_Mode = 0;
                 initTimerCount();
             }
@@ -332,11 +337,15 @@ void UpdateDisplayInfo(){
                 digitalWrite(6, LOW);
                 digitalWrite(7, LOW);
                 digitalWrite(8, LOW);
+                DisplayClean();
                 Work_Mode = 0;
                 initTimerCount();
             }
             break;
     }
+}
+void DisplayClean(){
+    //[todo] make all pin low
 }
 
 void ControlLedBlink(int pinNum){
@@ -355,7 +364,6 @@ void ControlLedBlink(int pinNum){
         Work_Led_Show_Time_Count = 0;
     }
 }
-
 void TimerCount(){
     Time_Count = Time_Count + 1;
 }
