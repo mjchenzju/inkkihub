@@ -41,7 +41,7 @@ void setup(){
     delay(10);
     
     attachInterrupt(0, ButtonStateChange, RISING); //0 is digital 2,
-    attachInterrupt(1, RestStateChange, RISING); //1 is digital 3
+    //attachInterrupt(1, RestStateChange, RISING); //1 is digital 3
     delay(10);
 
     MsTimer2::set(500, loop500ms); // 500ms period to check the button state
@@ -434,7 +434,7 @@ void ButtonStateChange(){
         BeginToJudgePressState = true;
     }
 }
-
+/*
 void RestStateChange(){
     //Serial.println("Rest State Change");
     // when Work_Mode is 4(short press show), don't catch moving action.
@@ -444,3 +444,4 @@ void RestStateChange(){
         Work_Mode = 1;
     }
 }
+*/
