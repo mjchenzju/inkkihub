@@ -34,6 +34,10 @@ int Work_Led_Show_Time_Count = 0;
 int Setting_Time_Out_Count = 0;
 int Uncatch_Time_Count =0;
 
+float ax_raw;
+float ay_raw;
+float az_raw;
+        
 void setup(){
     wdt_enable(WDTO_4S);
     Serial.begin(9600);
@@ -41,7 +45,7 @@ void setup(){
     delay(10);
     
     attachInterrupt(0, ButtonStateChange, RISING); //0 is digital 2,
-    attachInterrupt(1, RestStateChange, RISING); //1 is digital 3
+    //attachInterrupt(1, RestStateChange, RISING); //1 is digital 3
     delay(10);
 
     MsTimer2::set(500, loop500ms); // 500ms period to check the button state
@@ -51,29 +55,23 @@ void setup(){
     pinMode(6, OUTPUT); 
     pinMode(7, OUTPUT); 
     pinMode(8, OUTPUT); 
+    
+    ax_raw = abs((analogRead(A0)-330)/70.0);
+    ay_raw = abs((analogRead(A1)-330)/70.0);
+    az_raw = abs((analogRead(A2)-330)/70.0);
 }
 
 void loop(){  
     wdt_reset();
     //Timing and display the time
     delay(100);
-    /*
-    if (Work_Mode == 0){
-        float ax_raw = abs(analogRead(A0)/16384.0-0.07);
-        float ay_raw = abs(analogRead(A1)/16384.0-0.01);
-        float az_raw = abs(analogRead(A2)/16384.0+0.08);
-        /
-        Serial.print("a/g:\t");
-        Serial.print(ax_raw); Serial.print("\t");
-        Serial.print(ay_raw); Serial.print("\t");
-        Serial.print(az_raw); Serial.print("\t");
-        if (ax_raw >2 || ay_raw>2 || az_raw>2.07){
+    if (Work_Mode == 0){//abs()
+        if (abs(ax_raw -abs((analogRead(A0)-330)/70.0)) > 0.25 || abs(ay_raw -abs((analogRead(A1)-330)/70.0)) > 0.25 || abs(az_raw -abs((analogRead(A2)-330)/70.0)) > 0.25){
             //Serial.println("Work_Mode changed : Working");
             initTimerCount();
             Work_Mode = 1;
         }
     }
-    */
 
 }
 
@@ -94,6 +92,15 @@ void loop500ms(){
         TimerCount();
     }
     else if(Work_Mode == 2){
+        if (Setting_Time_Out_Count >10){ //Setting mode time out: 5s
+            Serial.println("Setting_Time_Out");
+            Work_Mode = 3;
+            Setting_Time_Out_Count = 0;           
+            Work_Led_Show_Time_Count = 1;
+        }
+        else{
+            Setting_Time_Out_Count++;
+        }
         if (Work_Led_Show_Time_Count == 0){
             digitalWrite(4, LOW);
             digitalWrite(5, LOW);
@@ -127,7 +134,7 @@ void loop500ms(){
                     digitalWrite(8, HIGH);
                     break;
             }
-            Work_Led_Show_Time_Count++;
+            Work_Led_Show_Time_Count = 1;
         }
         else if (Work_Led_Show_Time_Count == 1){
             digitalWrite(4, LOW);
@@ -136,19 +143,6 @@ void loop500ms(){
             digitalWrite(7, LOW);
             digitalWrite(8, LOW);
             Work_Led_Show_Time_Count =0;
-        }
-        if (Setting_Time_Out_Count >10){ //Setting mode time out: 5s
-            Work_Mode = 3;
-            Setting_Time_Out_Count = 0;
-            Serial.println("Setting_Time_Out");
-            digitalWrite(4, LOW);
-            digitalWrite(5, LOW);
-            digitalWrite(6, LOW);
-            digitalWrite(7, LOW);
-            digitalWrite(8, LOW);
-        }
-        else{
-            Setting_Time_Out_Count++;
         }
     }
     else if (Work_Mode == 3){
@@ -374,12 +368,17 @@ void JudgePressState(){
                 //A long press, begin to process
                 Serial.println("long press, entry setting mode");
                 Work_Mode = 2;
+                /*
                 digitalWrite(4, HIGH);
                 digitalWrite(5, HIGH);
                 digitalWrite(6, HIGH);
                 digitalWrite(7, HIGH);
                 digitalWrite(8, HIGH);
+                */
                 JudgePressCount = 0;
+                Work_Led_Show_Time_Count = 0;
+                Setting_Time_Out_Count = 0;
+                initTimerCount();
                 BeginToJudgePressState = false;
             }
         }
@@ -438,6 +437,7 @@ void ButtonStateChange(){
         BeginToJudgePressState = true;
     }
 }
+/*
 void RestStateChange(){
     //Serial.println("Rest State Change");
     // when Work_Mode is 4(short press show), don't catch moving action.
@@ -447,3 +447,4 @@ void RestStateChange(){
         Work_Mode = 1;
     }
 }
+*/
