@@ -14,6 +14,7 @@ digital 5: led for 4hour
 digital 6: led for 6hour
 digital 7: led for 8hour
 digital 8: led for 10hour
+
 Analog  0: x
 Analog  1: y
 Analog  2: z
@@ -23,6 +24,16 @@ Analog  2: z
 
 #include <avr/wdt.h> 
 #include <MsTimer2.h>
+
+
+//Modify the parameters in this place---------------------------------------
+float sensitivity = 0.25; //Moving sensitivity
+float setting_mode_time_out = 5;  //Setting mode time out: 5s
+float dont_catch_time = 20; // don't catch time 20s
+float long_press_time = 2; //long press time 2s
+int clock_frequency = 50; // 50ms to refresh
+//--------------------------------------------------------------------------
+
 
 boolean BeginToJudgePressState = false;
 int JudgePressCount = 0;
@@ -48,7 +59,7 @@ void setup(){
     //attachInterrupt(1, RestStateChange, RISING); //1 is digital 3
     delay(10);
 
-    MsTimer2::set(500, loop500ms); // 500ms period to check the button state
+    MsTimer2::set(clock_frequency, loop500ms); // 500ms period to check the button state
     MsTimer2::start();
     pinMode(4, OUTPUT); 
     pinMode(5, OUTPUT); 
@@ -59,22 +70,27 @@ void setup(){
     ax_raw = abs((analogRead(A0)-330)/70.0);
     ay_raw = abs((analogRead(A1)-330)/70.0);
     az_raw = abs((analogRead(A2)-330)/70.0);
+    
+    setting_mode_time_out = setting_mode_time_out*2;
+    dont_catch_time = dont_catch_time*2;
+    long_press_time = long_press_time*2;
 }
 
 void loop(){  
     wdt_reset();
     //Timing and display the time
-    delay(100);
+    
+}
+
+void JudgeMovingAction(){
     if (Work_Mode == 0){//abs()
-        if (abs(ax_raw -abs((analogRead(A0)-330)/70.0)) > 0.25 || abs(ay_raw -abs((analogRead(A1)-330)/70.0)) > 0.25 || abs(az_raw -abs((analogRead(A2)-330)/70.0)) > 0.25){
+        if (abs(ax_raw -abs((analogRead(A0)-330)/70.0)) > sensitivity || abs(ay_raw -abs((analogRead(A1)-330)/70.0)) > sensitivity || abs(az_raw -abs((analogRead(A2)-330)/70.0)) > (sensitivity+0.5)){
             //Serial.println("Work_Mode changed : Working");
             initTimerCount();
             Work_Mode = 1;
         }
     }
-
 }
-
 void initTimerCount(){
     Time_Count = 0;
     Short_Press_Show_Time_Count = 0;
@@ -87,12 +103,13 @@ void initTimerCount(){
 
 void loop500ms(){
     JudgePressState();
+    JudgeMovingAction();
     if (Work_Mode == 1){
         UpdateDisplayInfo();
         TimerCount();
     }
     else if(Work_Mode == 2){
-        if (Setting_Time_Out_Count >10){ //Setting mode time out: 5s
+        if (Setting_Time_Out_Count > setting_mode_time_out){ //Setting mode time out: 5s
             Serial.println("Setting_Time_Out");
             Work_Mode = 3;
             Setting_Time_Out_Count = 0;           
@@ -177,14 +194,14 @@ void loop500ms(){
             }
             
         }
-        else if (Uncatch_Time_Count==10){ //uncatch time 20s
+        else if (Uncatch_Time_Count == 10){ 
             digitalWrite(4, LOW);
             digitalWrite(5, LOW);
             digitalWrite(6, LOW);
             digitalWrite(7, LOW);
             digitalWrite(8, LOW);
         }
-        else if(Uncatch_Time_Count > 40){
+        else if(Uncatch_Time_Count > dont_catch_time){ // don't catch time 20s
             Work_Mode = 0;
             initTimerCount();
         }
@@ -361,7 +378,7 @@ void JudgePressState(){
     if (BeginToJudgePressState == true){
         if (digitalRead(2)){
             //begin to judge long press by count
-            if (JudgePressCount < 4){
+            if (JudgePressCount < long_press_time){ //long press time 2.5s
                 JudgePressCount = JudgePressCount + 1;
             }
             else{
