@@ -56,6 +56,7 @@ float az_raw;
         
 void setup(){
     wdt_enable(WDTO_4S);
+    
     Serial.begin(115200);
     Serial.println("Shake Timer 1.0.4");
     delay(10);
@@ -79,9 +80,10 @@ void setup(){
     setting_mode_time_out = setting_mode_time_out*20;
     dont_catch_time = dont_catch_time*20 - 5;
     long_press_time = long_press_time*20-10;
+    
 }
 
-void loop(){  
+void loop(){
     wdt_reset();
     //Timing and display the time
     
@@ -94,10 +96,11 @@ void JudgeMovingAction(){
             if (abs(ax_raw -abs((analogRead(A0)-330)/70.0)) > sensitivity || abs(ay_raw -abs((analogRead(A1)-330)/70.0)) > sensitivity || abs(az_raw -abs((analogRead(A2)-330)/70.0)) > sensitivity){
                 //Serial.println("Moving_State_Count++");
                 Moving_State_Count++;
+                
                 ax_raw = abs((analogRead(A0)-330)/70.0);
                 ay_raw = abs((analogRead(A1)-330)/70.0);
                 az_raw = abs((analogRead(A2)-330)/70.0);
-
+                /*
                 Serial.print("ax_raw:");
                 Serial.print(ax_raw);
                 Serial.print(";  ");
@@ -107,6 +110,7 @@ void JudgeMovingAction(){
                 Serial.print("az_raw:");
                 Serial.print(az_raw);
                 Serial.println(";  ");
+                */
             }
 
             if(Moving_State_Count >= 3){
