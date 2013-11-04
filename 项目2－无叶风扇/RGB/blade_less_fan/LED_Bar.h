@@ -42,10 +42,15 @@
 //#define CmdMode 0x0000  //Work on 8-bit mode
 #define ON 0x00FF   //16-bit 1 data
 #define SHUT 0x0000   //16-bit 0 data
+
+#define LED_NUM 2
+
 class LED_Bar
 {
   public:
   LED_Bar(void);
+  void LED_Controler(unsigned int rgb_upper[], unsigned int rgb_lower[]);
+  void CLEAN_LED();
   void set_LED_Index(unsigned int index);
   void set_LED_Index(unsigned int index1,unsigned int index2);
   void set_LED_Range(unsigned int indexTo);

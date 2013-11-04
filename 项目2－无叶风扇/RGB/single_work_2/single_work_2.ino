@@ -30,8 +30,8 @@ void loop()
     // set the light range ; 0 means no LED will light, 
   // "3" means the first 3 LED will be light.
    
-    myLED.set_LED1(0b000001101010101);
-    myLED.set_LED1();
+    myLED.set_LED_Index(0b000100100100100);
+    myLED.set_LED_Index(0b000100100100100);
    
 
    delay(1000);
