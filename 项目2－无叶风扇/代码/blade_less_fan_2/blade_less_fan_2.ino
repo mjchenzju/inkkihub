@@ -60,11 +60,11 @@ void execute_Command(int command){
     }
     case four_key:{
       unsigned char a; 
-      for (a=0;a<155;a++){
+      for (a=0;a<155;a = a +5){
         unsigned int up[] = {0x0000,0x00aa-a,0x0000};
         unsigned int low[] = {0x0000,0X0000,0x0000};
         myLED.LED_Controler(up,low);
-        delay(10);
+        delay(15);
       }
       break;
     }
