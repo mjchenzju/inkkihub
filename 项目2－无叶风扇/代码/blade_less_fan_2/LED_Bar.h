@@ -36,7 +36,7 @@
 #define GRAYSCALE_16_BIT  0x11
 
 //#define CMD_MODE 0x00
-#define CmdMode (GRAYSCALE_16_BIT << 8)
+#define CmdMode (GRAYSCALE_8_BIT << 8)
 //#define Cmd_Mode (0x1100)
 
 //#define CmdMode 0x0000  //Work on 8-bit mode

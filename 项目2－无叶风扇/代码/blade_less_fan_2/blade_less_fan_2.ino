@@ -58,6 +58,16 @@ void execute_Command(int command){
       myLED.LED_Controler(up,low);
       break;
     }
+    case four_key:{
+      unsigned char a; 
+      for (a=0;a<155;a++){
+        unsigned int up[] = {0x0000,0x00aa-a,0x0000};
+        unsigned int low[] = {0x0000,0X0000,0x0000};
+        myLED.LED_Controler(up,low);
+        delay(10);
+      }
+      break;
+    }
     case remote_down:{
       myLED.CLEAN_LED();
       break;
