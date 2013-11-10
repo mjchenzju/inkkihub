@@ -28,10 +28,7 @@ decode_results results;
 void setup()
 {
     Serial.begin(115200);   //debug serial
-    delay(100);
-    //Serial.println("IR Controler");
-    delay(100);
-
+    
     irrecv.enableIRIn(); // Start the receiver
 }
 
@@ -67,6 +64,26 @@ void execute_Command(int command){
       Serial.print('4');
       break;
     }
+    case five_key:{
+      Serial.print('5');
+      break;
+    }
+    case six_key:{
+      Serial.print('6');
+      break;
+    }
+    case seven_key:{
+      Serial.print('7');
+      break;
+    }
+    case eight_key:{
+      Serial.print('8');
+      break;
+    }
+     case nine_key:{
+      Serial.print('9');
+      break;
+    }
     case enter_key:{
       Serial.print('e');
       break;
@@ -78,14 +95,17 @@ void execute_Command(int command){
     }
     case remote_down:{
       //Reduce the temperature
+      Serial.print('d');
       break;
     }
     case remote_left:{
       //Raise the wind speed
+      Serial.print('l');
       break;
     }
     case remote_right:{
       //Reduce the wind speed
+      Serial.print('r');
       break;
     }
   }
