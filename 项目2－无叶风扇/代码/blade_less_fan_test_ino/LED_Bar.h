@@ -40,10 +40,26 @@
 //#define Cmd_Mode (0x1100)
 
 //#define CmdMode 0x0000  //Work on 8-bit mode
-#define ON 0x00aa   //16-bit 1 data
+#define ON 0x00FF   //16-bit 1 data
 #define SHUT 0x0000   //16-bit 0 data
 
 #define LED_NUM 2
+
+#define remote_up 16736925
+#define remote_down 16754775 
+#define remote_left 16720605
+#define remote_right 16761405
+#define enter_key 16712445
+#define one_key 16738455 
+#define two_key 16750695
+#define three_key 16756815
+#define four_key 16724175 
+#define five_key 16718055
+#define six_key 16743045
+#define seven_key 16716015
+#define eight_key 16726215 
+#define nine_key 16734885
+#define zero_key 16730805
 
 class LED_Bar
 {

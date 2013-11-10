@@ -1,4 +1,4 @@
-/* a blade less fan simple v.2
+/* a blade less fan simple v.test
 
 v1 2013.11.4 add led controler:
     myLED.LED_Controler()
@@ -6,11 +6,7 @@ v1 2013.11.4 add led controler:
     
 v2 2013.11.4 add IR Function
 */
-
 #include "LED_Bar.h"
-#include "Less_Fan_Function.h"
-
-#include <IRremote.h>
 #include "Timer.h"
 
 //Modify the parameters in this place---------------------------------------
@@ -22,25 +18,17 @@ unsigned int ha_er_bin_up[] = {0x0000,0x00aa,0x0000};
 unsigned int ha_er_bin_low[] = {0x0000,0X0000,0x0000};
 unsigned int cao_yuan_up[] = {0x000a,0x0000,0x00aa};
 unsigned int cao_yuan_low[] = {0x0000,0X0000,0x0000};
-unsigned int ma_er_dai_fu_up[] = {0x0000,0x00aa,0x00aa};
+unsigned int ma_er_dai_fu_up[] = {0x000a,0x000a,0x00aa};
 unsigned int ma_er_dai_fu_low[] = {0x0000,0X0000,0x0000};
 //--------------------------------------------------------------------------
-
-int RECV_PIN = 11;
-IRrecv irrecv(RECV_PIN);
 
 boolean BeginToJudgePressState = false;
 int JudgePressCount = 0;
 int Work_Mode = 0; //0 = not work; 1 = first run after work; 2 ＝ work
 int Display_Command = 1;
 
-// init the function--------
-decode_results results;
-
 LED_Bar myLED;
-Less_Fan_Function myFunction;
 Timer t;
-//----------------------------
 
 void setup()
 {
@@ -48,26 +36,24 @@ void setup()
 
     Serial.begin(115200);   //debug serial
     delay(100);
-    Serial.println("blade less fan simple v.2");
+    Serial.println("blade less fan simple v.test");
     delay(100);
     Serial2.begin(115200);  //wifi Serial
     delay(100);
-
-    attachInterrupt(0, BlockingStateChange, HIGH); //0 is digital 2， 
-
-    irrecv.enableIRIn(); // Start the receiver
+    
+    attachInterrupt(0, BlockingStateChange, HIGH); //0 is digital 2，
 
     t.every(50, loop50ms,(void*)1);
 
     long_press_time = long_press_time*20-10;
-  
+    
 }
 
 void loop50ms(void* context){
   JudgePressState();
   
   if (Work_Mode != 0){
-    //UpdateDisplayInfo();
+    UpdateDisplayInfo();
   }  
   if (Work_Mode == 1){
     //this is the first run after change to work mode
@@ -86,24 +72,7 @@ void loop50ms(void* context){
 void loop()
 { 
   t.update();
-
-  myLED.LED_Controler(re_dai_yu_lin_up,re_dai_yu_lin_low);
   
-  delay(1000);
-
-  // First Part : Receive the IR value
-  if (irrecv.decode(&results)) {
-    Serial.println(results.value);
-    //myFunction.dump(&results);
-    if (Work_Mode != 0){
-      execute_Command(results.value);
-    }
-    else if (results.value == enter_key){
-      execute_Command(enter_key);
-    }
-    irrecv.resume(); 
-  }
-
   // Second Prat ： Receive the Serial2 value from wifi module
   while (Serial2.available() > 0){
     char temp =char(Serial2.read());
@@ -126,7 +95,6 @@ void loop()
       execute_Command(enter_key);
     }
   }
-
 }
 
 /*-------------
@@ -272,3 +240,4 @@ void ChangeDeviceState(){
     Work_Mode = 0;
   }
 }
+

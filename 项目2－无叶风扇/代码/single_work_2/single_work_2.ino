@@ -4,6 +4,8 @@
 */
 #include "LED_Bar.h"
 LED_Bar myLED;
+unsigned int re_dai_yu_lin_up[]  = {0x00aa,0x000a,0x0000};
+unsigned int re_dai_yu_lin_low[] = {0x0000,0X0000,0x0000};
 void setup()
 {
   // the set_LED_Index set the indivial LED state.
@@ -20,25 +22,13 @@ void setup()
   //LED1------ON;
   // while the first "00000" is reserved.
  //LED.set_LED_Index(0b000001101010101);
+ Serial.begin(115200);   //debug serial
   delay(3000);
 }
 void loop()
 { 
-  while(1)
-  {
-    //for (int i=0;i<=10;i++)
-    // set the light range ; 0 means no LED will light, 
-  // "3" means the first 3 LED will be light.
-   
-    myLED.set_LED_Index(0b000100100100100);
-    myLED.set_LED_Index(0b000100100100100);
-   
-
-   delay(1000);
-   myLED.set_LED2();
-   myLED.set_LED2();
-   delay(1000);
-    
-  }
+  Serial.println(1);
+   myLED.LED_Controler(re_dai_yu_lin_up,re_dai_yu_lin_low);
+   delay(3000);
   
 }
