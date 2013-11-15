@@ -272,7 +272,7 @@ void loop50ms(void* context){
   else if(Work_Mode == 0){
     //close the led module and Led screen
     UpdateDisplayInfo(0);
-    tm1637.set(BRIGHT_DARKEST);
+    tm1637.clearDisplay();
     //[todo]close everything
 
   }
@@ -497,13 +497,13 @@ void UpdateDisplayInfo(int _com){
       //execute_Command(Display_Command);
       execute_Display_Command(Display_Mode);
       Display_State = 1;
+      TimeDisp[0] = NumTab[2];
+      TimeDisp[1] = NumTab[6];
+      TimeDisp[2] = 0x01;
+      TimeDisp[3] = NumTab[0];
+      TimeDisp[4] = NumTab[0];
+      execute_Tem_Display_Command(TimeDisp);
     }
-    TimeDisp[0] = NumTab[2];
-    TimeDisp[1] = NumTab[6];
-    TimeDisp[2] = 0x01;
-    TimeDisp[3] = NumTab[0];
-    TimeDisp[4] = NumTab[0];
-    execute_Tem_Display_Command(TimeDisp);
   }
 }
 

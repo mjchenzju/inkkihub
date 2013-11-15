@@ -4,6 +4,7 @@
 
 #include <WaveHC.h>
 #include <WaveUtil.h>
+#include <MsTimer2.h>
 
 SdReader card;    // This object holds the information for the card
 FatVolume vol;    // This holds the information for the partition on the card
@@ -14,7 +15,8 @@ WaveHC wave;      // This is the only wave (audio) object, since we will only pl
  * Define macro to put error messages in flash memory
  */
 #define error(msg) error_P(PSTR(msg))
-
+int Play_New = 0;
+char Play_Name;
 //////////////////////////////////// SETUP
 
 void setup() {
@@ -34,6 +36,9 @@ void setup() {
 
   PgmPrintln("Files found:");
   root.ls();
+
+  MsTimer2::set(50, loop50ms); // 500ms period to check the button state
+  MsTimer2::start();
 }
 
 /////////////////////////////////// LOOP
@@ -47,6 +52,24 @@ void loop() {
     //Serial.print(char(temp));
     Serial.write(c);
     speaknum(c);
+  }
+  if (Play_New == 1){
+    Play_New =0;
+    speaknum(Play_Name);
+  }
+}
+
+void loop50ms(){
+  while (Serial.available() > 0){
+    char c =char(Serial.read());
+    //Serial.print(char(temp));
+    Serial.write(c);
+    //speaknum(c);
+    if (wave.isplaying) {// already playing something, so stop it!
+      wave.stop(); // stop it
+    }
+    Play_Name = c;
+    Play_New = 1;
   }
 }
 
