@@ -440,9 +440,13 @@ void execute_Command(int command){
       break;
     }
     case eight_key:{
+      Display_Mode = 3;
+      execute_Display_Command(Display_Mode);
       break;
     }
     case nine_key:{
+      Display_Mode = 4;
+      execute_Display_Command(Display_Mode);
       break;
     }
     case zero_key:{
